@@ -1,0 +1,6 @@
+---
+- name: Install OpenJDK 11
+  command:
+    cmd: amazon-linux-extras install java-openjdk11 -y
+    creates: /usr/lib/jvm/jre-11-openjdk/bin/java
+  become: yes

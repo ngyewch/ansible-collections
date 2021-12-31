@@ -1,6 +1,13 @@
 ---
-- name: Enable EPEL repository
+- name: Install EPEL repository
   yum:
     name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     state: present
   become: yes
+
+# alternative
+#- name: Install EPEL repository
+#  command:
+#    cmd: amazon-linux-extras install epel -y
+#    creates: /etc/yum.repos.d/epel.repo
+#  become: yes
