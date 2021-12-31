@@ -1,0 +1,28 @@
+---
+- name: Install certbot
+  yum:
+    name:
+      - certbot
+    state: present
+  become: yes
+
+- name: Add certbot auto renew script to /etc/cron.d
+  cron:
+    name: "certbot auto renew"
+    hour: "0,12"
+    minute: "0"
+    user: root
+    job: "certbot renew --no-self-upgrade"
+    cron_file: certbot-auto-renew
+    state: present
+  become: yes
+
+- name: Set cronjob PATH environment variable
+  cron:
+    name: PATH
+    env: yes
+    user: root
+    job: /usr/bin:/bin:/sbin
+    cron_file: certbot-auto-renew
+    state: present
+  become: yes

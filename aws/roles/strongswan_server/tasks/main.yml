@@ -1,0 +1,96 @@
+---
+- name: Install strongswan and openssl
+  yum:
+    name:
+      - strongswan
+      - openssl
+    state: present
+  become: yes
+  register: strongswan
+
+- name: Copy sysctl.conf
+  copy:
+    src: etc/sysctl.d/99-ipsec.conf
+    dest: /etc/sysctl.d/
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  register: sysctl_conf
+
+- name: Update sysctl
+  command: sysctl --system
+  become: yes
+  when: sysctl_conf.changed
+
+- name: Copy configuration (common)
+  copy:
+    src: etc/strongswan/ipsec.conf
+    dest: /etc/strongswan/ipsec.conf
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  register: ipsec_conf
+
+- name: Copy secrets (common)
+  copy:
+    src: etc/strongswan/ipsec.secrets
+    dest: /etc/strongswan/
+    owner: root
+    group: root
+    mode: '0600'
+  become: yes
+  register: ipsec_secrets
+
+- name: Create /etc/strongswan/ipsec.conf.d/
+  file:
+    path: /etc/strongswan/ipsec.conf.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+
+- name: Create /etc/strongswan/ipsec.secrets.d/
+  file:
+    path: /etc/strongswan/ipsec.secrets.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+  become: yes
+
+- name: Copy default CA certs
+  copy:
+    src: etc/strongswan/ipsec.d/cacerts/
+    dest: /etc/strongswan/ipsec.d/cacerts/
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  register: cacerts
+
+- name: LetsEncrypt post renewal hook
+  copy:
+    src: etc/letsencrypt/renewal-hooks/post/strongswan.sh
+    dest: /etc/letsencrypt/renewal-hooks/post/
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+
+- name: Enable service strongswan
+  systemd:
+    name: strongswan
+    enabled: yes
+    state: started
+  become: yes
+
+- name: Restart service strongswan (reload not available)
+  systemd:
+    name: strongswan
+    enabled: yes
+    state: restarted
+  become: yes
+  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed or cacerts.changed

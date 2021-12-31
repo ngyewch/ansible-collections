@@ -1,0 +1,11 @@
+namespace: arl
+name: aws
+version: 1.0.0
+readme: README.md
+authors:
+  - Nick Ng (https://github.com/ngyewch)
+description: Ansible collection for Amazon Linux 2.
+license:
+  - MIT
+tags:
+  - aws

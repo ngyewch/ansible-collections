@@ -1,0 +1,4 @@
+---
+- name: "Obtain/renew SSL cert for {{ domain_name }}"
+  command: "certbot certonly --standalone -d {{ domain_name }} -m {{ email_address }} --agree-tos -n"
+  become: yes
