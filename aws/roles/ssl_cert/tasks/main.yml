@@ -4,15 +4,8 @@
     path: /sbin/nginx
   register: stat_nginx
 
-- name: Install certbot-nginx
-  yum:
-    name: python2-certbot-nginx
-    state: present
-  when: stat_nginx.stat.exists
-  become: yes
-
 - name: "Obtain/renew SSL cert for {{ domain_name }} (via nginx)"
-  command: "certbot certonly -d {{ domain_name }} -m {{ email_address }} --agree-tos -n"
+  command: "certbot certonly --nginx -d {{ domain_name }} -m {{ email_address }} --agree-tos -n"
   when: stat_nginx.stat.exists
   become: yes
 

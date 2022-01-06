@@ -26,3 +26,15 @@
     cron_file: certbot-auto-renew
     state: present
   become: yes
+
+- name: Check if nginx exists
+  stat:
+    path: /sbin/nginx
+  register: stat_nginx
+
+- name: Install certbot-nginx
+  yum:
+    name: python2-certbot-nginx
+    state: present
+  when: stat_nginx.stat.exists
+  become: yes
