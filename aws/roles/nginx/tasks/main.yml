@@ -1,0 +1,38 @@
+---
+- name: Install nginx
+  command: amazon-linux-extras install nginx1.12=latest -y
+  args:
+    creates: /sbin/nginx
+  become: yes
+
+- name: Copy configuration to include sites-available/*
+  copy:
+    src: etc/nginx/conf.d/sites.conf
+    dest: /etc/nginx/conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Create /etc/nginx/sites-enabled
+  file:
+    path: /etc/nginx/sites-enabled
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  become: yes
+
+- name: Enable service nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started
+  become: yes
+
+- name: Reload service nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: reloaded
+  become: yes
