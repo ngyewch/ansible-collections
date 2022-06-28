@@ -38,3 +38,13 @@
     state: present
   when: stat_nginx.stat.exists
   become: yes
+
+- name: Install certbot renewal hook
+  copy:
+    src: etc/letsencrypt/renewal-hooks/post/nginx.sh
+    dest: /etc/letsencrypt/renewal-hooks/post/
+    owner: root
+    group: root
+    mode: '0755'
+  when: stat_nginx.stat.exists
+  become: yes
