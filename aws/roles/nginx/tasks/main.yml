@@ -5,7 +5,16 @@
     creates: /sbin/nginx
   become: yes
 
-- name: Copy configuration to include sites-available/*
+- name: Copy global configuration
+  copy:
+    src: etc/nginx/conf.d/global.conf
+    dest: /etc/nginx/conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Copy configuration to include sites-enabled/*
   copy:
     src: etc/nginx/conf.d/sites.conf
     dest: /etc/nginx/conf.d/
