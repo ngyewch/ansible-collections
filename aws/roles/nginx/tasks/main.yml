@@ -10,7 +10,9 @@
     path: /etc/nginx/nginx.conf
     marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
     block: |
-      server_names_hash_bucket_size 128;
+      http {
+          server_names_hash_bucket_size 128;
+      }
   become: yes
 
 - name: Copy configuration to include sites-enabled/*
