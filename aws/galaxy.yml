@@ -1,6 +1,6 @@
 namespace: arl
 name: aws
-version: 1.4.5
+version: 1.4.6
 readme: README.md
 authors:
   - Nick Ng (https://github.com/ngyewch)
