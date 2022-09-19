@@ -5,13 +5,12 @@
     creates: /sbin/nginx
   become: yes
 
-- name: Copy global configuration
-  copy:
-    src: etc/nginx/conf.d/global.conf
-    dest: /etc/nginx/conf.d/
-    owner: root
-    group: root
-    mode: '0644'
+- name: Update /etc/nginx/nginx.conf
+  blockinfile:
+    path: /etc/nginx/nginx.conf
+    marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
+    block: |
+      server_names_hash_bucket_size 128;
   become: yes
 
 - name: Copy configuration to include sites-enabled/*
