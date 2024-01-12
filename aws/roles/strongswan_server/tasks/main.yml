@@ -61,16 +61,6 @@
     mode: '0700'
   become: yes
 
-- name: Copy default CA certs
-  copy:
-    src: etc/strongswan/ipsec.d/cacerts/
-    dest: /etc/strongswan/ipsec.d/cacerts/
-    owner: root
-    group: root
-    mode: '0644'
-  become: yes
-  register: cacerts
-
 - name: LetsEncrypt post renewal hook
   copy:
     src: etc/letsencrypt/renewal-hooks/post/strongswan.sh
@@ -93,4 +83,4 @@
     enabled: yes
     state: restarted
   become: yes
-  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed or cacerts.changed
+  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed

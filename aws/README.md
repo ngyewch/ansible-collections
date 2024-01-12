@@ -14,6 +14,10 @@ collections:
 
 ## Roles
 
+## arl.aws.certbot
+
+Install certbot.
+
 ### arl.aws.epel
 
 Install [EPEL](https://docs.fedoraproject.org/en-US/epel/) repository.
@@ -21,10 +25,6 @@ Install [EPEL](https://docs.fedoraproject.org/en-US/epel/) repository.
 ## arl.aws.nginx
 
 Install nginx.
-
-## arl.aws.certbot
-
-Install certbot.
 
 ## arl.aws.ssl_cert
 
@@ -34,3 +34,7 @@ Request SSL cert from LetsEncrypt via certbot.
 | --- | --- |
 | domain_name | Domain name. |
 | email_address | Email address. |
+
+## arl.aws.strongswan_server
+
+Install Strongswan server.
