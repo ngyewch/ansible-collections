@@ -26,6 +26,21 @@ Install [EPEL](https://docs.fedoraproject.org/en-US/epel/) repository.
 
 Install nginx.
 
+## arl.aws.oauth2_proxy
+
+Install oauth2-proxy.
+
+## arl.aws.oauth2_proxy_service
+
+Install oauth2-proxy service.
+
+| Variable | Description |
+| --- | --- |
+| instance_name | Instance name. |
+
+Templates:
+* etc/oauth2-proxy/{{ instance_name }}.cfg
+
 ## arl.aws.ssl_cert
 
 Request SSL cert from LetsEncrypt via certbot.
@@ -38,3 +53,11 @@ Request SSL cert from LetsEncrypt via certbot.
 ## arl.aws.strongswan_server
 
 Install Strongswan server.
+
+Files:
+* etc/strongswan/ipsec.conf.d/*
+* etc/strongswan/ipsec.secrets.d/*
+
+Templates:
+* etc/strongswan/ipsec.conf.d/*
+* etc/strongswan/ipsec.secrets.d/*
