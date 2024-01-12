@@ -1,0 +1,5 @@
+---
+allow_duplicates: true
+dependencies:
+  - role: arl.aws.nginx
+  - role: arl.aws.ssl_cert

@@ -26,6 +26,15 @@ Install [EPEL](https://docs.fedoraproject.org/en-US/epel/) repository.
 
 Install nginx.
 
+## arl.aws.nginx_proxy
+
+Set up nginx reverse proxy.
+
+| Variable | Description |
+| --- | --- |
+| domain_name | Domain name. |
+| proxy_pass | Upstream. |
+
 ## arl.aws.oauth2_proxy
 
 Install oauth2-proxy.

@@ -1,0 +1,30 @@
+---
+- name: Create sites-available directory
+  file:
+    path: /etc/nginx/sites-available
+    state: directory
+    mode: 0755
+  become: yes
+
+- name: "Copy nginx configuration for {{ domain_name }}"
+  template:
+    src: etc/nginx/sites-available/site.j2
+    dest: "/etc/nginx/sites-available/{{ domain_name }}"
+    mode: '0644'
+  become: yes
+  register: nginx_site_conf
+
+- name: "Enable {{ domain_name }} site"
+  file:
+    src: "/etc/nginx/sites-available/{{ domain_name }}"
+    dest: "/etc/nginx/sites-enabled/{{ domain_name }}"
+    state: link
+  become: yes
+
+- name: Reload service nginx
+  systemd:
+    name: nginx
+    enabled: yes
+    state: reloaded
+  become: yes
+  when: nginx_site_conf.changed
