@@ -1,8 +1,8 @@
 ---
 - name: "Copy oauth2-proxy@{{ instance_name }} configuration"
   template:
-    src: "etc/oauth2-proxy/oauth2-proxy-{{ instance_name }}.cfg"
-    dest: "/etc/oauth2-proxy/oauth2-proxy-{{ instance_name }}.cfg"
+    src: "etc/oauth2-proxy/{{ instance_name }}.cfg"
+    dest: "/etc/oauth2-proxy/{{ instance_name }}.cfg"
   become: yes
   register: oauth2_proxy_config
 
