@@ -43,7 +43,7 @@
   become: yes
   register: ipsec_secrets
 
-- name: Create /etc/strongswan/ipsec.conf.d/
+- name: Create configuration directory
   file:
     path: /etc/strongswan/ipsec.conf.d
     state: directory
@@ -52,7 +52,7 @@
     mode: '0755'
   become: yes
 
-- name: Create /etc/strongswan/ipsec.secrets.d/
+- name: Create secrets directory
   file:
     path: /etc/strongswan/ipsec.secrets.d
     state: directory
@@ -60,6 +60,54 @@
     group: root
     mode: '0700'
   become: yes
+
+- name: Copy configuration (specific/files)
+  copy:
+    src: "{{ item }}"
+    dest: /etc/strongswan/ipsec.conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+  with_fileglob: 
+    - files/etc/strongswan/ipsec.conf.d/*.conf
+  become: yes
+  register: ipsec_conf_d_files
+
+- name: Copy configuration (specific/templates)
+  template:
+    src: "{{ item }}"
+    dest: /etc/strongswan/ipsec.conf.d/
+    owner: root
+    group: root
+    mode: '0644'
+  with_fileglob: 
+    - templates/etc/strongswan/ipsec.conf.d/*.conf
+  become: yes
+  register: ipsec_conf_d_templates
+
+- name: Copy secrets (specific/files)
+  copy:
+    src: "{{ item }}"
+    dest: /etc/strongswan/ipsec.secrets.d/
+    owner: root
+    group: root
+    mode: '0600'
+  with_fileglob: 
+    - files/etc/strongswan/ipsec.secrets.d/*
+  become: yes
+  register: ipsec_secrets_d_files
+
+- name: Copy secrets (specific/templates)
+  template:
+    src: "{{ item }}"
+    dest: /etc/strongswan/ipsec.secrets.d/
+    owner: root
+    group: root
+    mode: '0600'
+  with_fileglob: 
+    - templates/etc/strongswan/ipsec.secrets.d/*
+  become: yes
+  register: ipsec_secrets_d_templates
 
 - name: LetsEncrypt post renewal hook
   copy:
@@ -83,4 +131,4 @@
     enabled: yes
     state: restarted
   become: yes
-  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed
+  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed or ipsec_conf_d_files.changed or ipsec_conf_d_templates.changed or ipsec_secrets_d_files.changed or ipsec_secrets_d_templates.changed
