@@ -1,6 +1,6 @@
 namespace: arl
 name: aws
-version: 1.7.3
+version: 1.8.0
 readme: README.md
 authors:
   - Nick Ng (https://github.com/ngyewch)
