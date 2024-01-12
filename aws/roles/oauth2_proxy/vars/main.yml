@@ -1,0 +1,16 @@
+---
+oauth2_proxy_version: "v7.5.1"
+
+os_dict:
+  Linux: "linux"
+  FreeBSD: "freebsd"
+  Darwin: "darwin"
+
+arch_dict:
+  x86_64: "amd64"
+  amd64: "amd64"
+  arm64: "arm64"
+  aarch64: "arm64"
+  armv6l: "armv6"
+  armhf: "armv6"
+  armv7l: "armv6"

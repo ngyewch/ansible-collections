@@ -1,0 +1,22 @@
+---
+- name: "Copy oauth2-proxy@{{ instance_name }} configuration"
+  template:
+    src: "etc/oauth2-proxy/oauth2-proxy-{{ instance_name }}.cfg"
+    dest: "/etc/oauth2-proxy/oauth2-proxy-{{ instance_name }}.cfg"
+  become: yes
+  register: oauth2_proxy_config
+
+- name: "Enable service oauth2-proxy@{{ instance_name }}"
+  systemd:
+    name: "oauth2-proxy@{{ instance_name }}"
+    enabled: yes
+    state: started
+  become: yes
+
+- name: "Restart service oauth2-proxy@{{ instance_name }}"
+  systemd:
+    name: "oauth2-proxy@{{ instance_name }}"
+    state: restarted
+    daemon-reload: yes
+  become: yes
+  when: oauth2_proxy.changed or oauth2_proxy_systemd_unit.changed or oauth2_proxy_config.changed
