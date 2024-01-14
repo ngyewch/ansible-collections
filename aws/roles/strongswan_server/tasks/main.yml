@@ -6,7 +6,8 @@
       - openssl
     state: present
   become: yes
-  register: strongswan
+  notify:
+    - Restart strongswan
 
 - name: Copy sysctl.conf
   copy:
@@ -16,12 +17,8 @@
     group: root
     mode: '0644'
   become: yes
-  register: sysctl_conf
-
-- name: Update sysctl
-  command: sysctl --system
-  become: yes
-  when: sysctl_conf.changed
+  notify:
+    - Update sysctl
 
 - name: Copy configuration (common)
   copy:
@@ -31,7 +28,8 @@
     group: root
     mode: '0644'
   become: yes
-  register: ipsec_conf
+  notify:
+    - Restart strongswan
 
 - name: Copy secrets (common)
   copy:
@@ -41,7 +39,8 @@
     group: root
     mode: '0600'
   become: yes
-  register: ipsec_secrets
+  notify:
+    - Restart strongswan
 
 - name: Create configuration directory
   file:
@@ -71,7 +70,8 @@
   with_fileglob: 
     - files/etc/strongswan/ipsec.conf.d/*.conf
   become: yes
-  register: ipsec_conf_d_files
+  notify:
+    - Restart strongswan
 
 - name: Copy configuration (specific/templates)
   template:
@@ -83,7 +83,8 @@
   with_fileglob: 
     - templates/etc/strongswan/ipsec.conf.d/*.conf
   become: yes
-  register: ipsec_conf_d_templates
+  notify:
+    - Restart strongswan
 
 - name: Copy secrets (specific/files)
   copy:
@@ -95,7 +96,8 @@
   with_fileglob: 
     - files/etc/strongswan/ipsec.secrets.d/*
   become: yes
-  register: ipsec_secrets_d_files
+  notify:
+    - Restart strongswan
 
 - name: Copy secrets (specific/templates)
   template:
@@ -107,7 +109,21 @@
   with_fileglob: 
     - templates/etc/strongswan/ipsec.secrets.d/*
   become: yes
-  register: ipsec_secrets_d_templates
+  notify:
+    - Restart strongswan
+
+- name: Copy CA certs
+  copy:
+    src: "{{ item }}"
+    dest: /etc/strongswan/ipsec.d/cacerts/
+    owner: root
+    group: root
+    mode: '0644'
+  with_fileglob: 
+    - files/etc/strongswan/ipsec.d/cacerts/*
+  become: yes
+  notify:
+    - Restart strongswan
 
 - name: LetsEncrypt post renewal hook
   copy:
@@ -124,11 +140,3 @@
     enabled: yes
     state: started
   become: yes
-
-- name: Restart service strongswan (reload not available)
-  systemd:
-    name: strongswan
-    enabled: yes
-    state: restarted
-  become: yes
-  when: strongswan.changed or ipsec_conf.changed or ipsec_secrets.changed or ipsec_conf_d_files.changed or ipsec_conf_d_templates.changed or ipsec_secrets_d_files.changed or ipsec_secrets_d_templates.changed
