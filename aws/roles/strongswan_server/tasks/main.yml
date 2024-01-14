@@ -125,15 +125,6 @@
   notify:
     - Restart strongswan
 
-- name: LetsEncrypt post renewal hook
-  copy:
-    src: etc/letsencrypt/renewal-hooks/post/strongswan.sh
-    dest: /etc/letsencrypt/renewal-hooks/post/
-    owner: root
-    group: root
-    mode: '0755'
-  become: yes
-
 - name: Enable service strongswan
   systemd:
     name: strongswan
